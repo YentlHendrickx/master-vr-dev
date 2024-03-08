@@ -69,7 +69,7 @@ public class MeshExtruder : MonoBehaviour
                         meshes.Add(currentMeshData);
                     }
 
-                    // Define vertices for the square (modify this as per your logic)
+                    // Define vertices for the square
                     Vector3 v1 = new Vector3(x, y, 0);
                     Vector3 v2 = new Vector3(x + 1, y, 0);
                     Vector3 v3 = new Vector3(x, y + 1, 0);
