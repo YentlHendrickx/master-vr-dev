@@ -1,53 +1,88 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
-public class ExtrapolateShape : MonoBehaviour
+public class CubeExtrusion : MonoBehaviour
 {
-    // Start is called before the first frame update
+    [Header("Settings")]
+    [Tooltip("How tall the walls are")]
+    public float zScale = 10f;
+    [Range(0f, 1f)]
+    [Tooltip("How lenient the color matching is. 0 is exact match and 1 is any color.")]
+    public float hardness = 0.1f;
+    [Tooltip("The color to match.")]
+    public Color targetColor = Color.black;
+    [Tooltip("The material to use for the mesh.")]
+    public Material material;
+
+    [Header("Debug")]
+    [Tooltip("Recalculate the 3D shape, careful with large sprites.")]
+    public bool recalculate = false;
+
+    private GameObject parent;
+
     void Start()
     {
-        // Get sprite
+        Initialize();
+    }
+
+    private void Initialize()
+    {
+        if (parent != null)
+        {
+            Destroy(parent);
+        }
+
+        parent = new GameObject("ExtrapolatedShape3D");
+        Calculate();
+    }
+
+    private void Calculate()
+    {
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
         Sprite sprite = spriteRenderer.sprite;
-        List<Vector2> blackPixels = new List<Vector2>();
 
-        // Find black pixels
+        List<Vector3> vertices = new List<Vector3>();
+        List<int> triangles = new List<int>();
+        List<Color> colors = new List<Color>();
+
+        List<Vector2> pixels = getVertexList(sprite);
+        Debug.Log("Number of cubes: " + pixels.Count);
+
+        foreach (var group in GroupPixels(pixels))
+        {
+            CreateCube(group, parent);
+        }
+
+        parent.transform.Rotate(90, 0, 0);
+        parent.transform.localScale = new Vector3(1, 1, zScale);
+    }
+
+    private List<Vector2> getVertexList(Sprite sprite)
+    {
+        List<Vector2> pixels = new List<Vector2>();
+
         for (int x = 0; x < sprite.texture.width; x++)
         {
             for (int y = 0; y < sprite.texture.height; y++)
             {
 
                 Color pixelColor = sprite.texture.GetPixel(x, y);
-                if (!IsAlmostWhite(pixelColor))
+                if (ColorWithinBounds(pixelColor, this.targetColor, this.hardness))
                 {
-                    blackPixels.Add(new Vector2(x, y));
+                    pixels.Add(new Vector2(x, y));
                 }
             }
         }
 
-        // Parent object
-        GameObject parent = new GameObject("ExtrapolatedShape3D");
-        float count = 0;
-        // Group pixels and create 3D objects
-        foreach (var group in GroupPixels(blackPixels))
-        {
-            CreateCube(group, parent);
-            count++;
-        }
-
-        Debug.Log("Number of cubes: " + count);
-
-        // Rotate parent 90 degress flat
-        parent.transform.Rotate(90, 0, 0);
-        // Sacle z up
-        parent.transform.localScale = new Vector3(1, 1, 10f);
+        return pixels;
     }
 
-    private bool IsAlmostWhite(Color color, float offset = 0.1f)
+    private bool ColorWithinBounds(Color color, Color targetColor, float hardness = 1)
     {
-        return color.r >= 1 - offset && color.g >= 1 - offset && color.b >= 1 - offset;
+        return Mathf.Abs(color.r - targetColor.r) <= hardness &&
+             Mathf.Abs(color.g - targetColor.g) <= hardness &&
+             Mathf.Abs(color.b - targetColor.b) <= hardness;
     }
 
     private IEnumerable<List<Vector2>> GroupPixels(List<Vector2> pixels)
@@ -98,11 +133,12 @@ public class ExtrapolateShape : MonoBehaviour
         cube.transform.localScale = new Vector3(maxX - minX + 1, 1, 1); // Scale based on the group width
         cube.name = "ExtrapolatedShape3D";
     }
-
-
-    // Update is called once per frame
-    void Update()
+    public void Update()
     {
-
+        if (recalculate)
+        {
+            recalculate = false;
+            Initialize();
+        }
     }
 }
