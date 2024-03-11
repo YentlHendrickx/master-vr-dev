@@ -132,7 +132,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 56395803}
-  - component: {fileID: 56395804}
   - component: {fileID: 56395805}
   m_Layer: 0
   m_Name: Extruder
@@ -156,23 +155,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
---- !u!114 &56395804
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 56395800}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c1537db71102b445adda0cd91a7e868, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  zScale: 1
-  hardness: 0.456
-  targetColor: {r: 0, g: 0, b: 0, a: 1}
-  material: {fileID: 2100000, guid: 19a3e238f9390d34aab567a71c01ef97, type: 2}
-  recalculate: 0
 --- !u!114 &56395805
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -185,9 +167,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57b7aaae09726474abd91e6846af6ee8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: 1fb39196615b6302095b9ecbce9a673e, type: 3}
+  sprite: {fileID: 21300000, guid: 4d5389eaa6b0c1c469342d188b132028, type: 3}
   zScale: 3
-  hardness: 0.69
+  hardness: 0.4
   targetColor: {r: 0, g: 0, b: 0, a: 1}
   material: {fileID: 2100000, guid: 19a3e238f9390d34aab567a71c01ef97, type: 2}
   recalculate: 1
@@ -317,7 +299,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0de5c706b3c26d56da020bebd6865020, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentUrl: http://ozone.kuubix.be/3D.glb
+  currentUrl: https://ozone.kuubix.be/3D.glb
   speed: 1000
 --- !u!4 &802625333
 Transform:
@@ -346,6 +328,7 @@ GameObject:
   - component: {fileID: 963194227}
   - component: {fileID: 963194226}
   - component: {fileID: 963194229}
+  - component: {fileID: 963194230}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -442,6 +425,21 @@ MonoBehaviour:
   speed: 60
   speedModifier: 2
   sensitivity: 100
+--- !u!114 &963194230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963194225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63805b25835a1ba46997105c01a79438, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  saveObjects: 0
+  ignoreList:
+  - {fileID: 963194225}
 --- !u!1 &1279285614
 GameObject:
   m_ObjectHideFlags: 0
@@ -554,7 +552,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0de5c706b3c26d56da020bebd6865020, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentUrl: http://ozone.kuubix.be/SARA.glb
+  currentUrl: https://ozone.kuubix.be/SARA.glb
   speed: 1000
 --- !u!4 &1680096998
 Transform:
@@ -600,7 +598,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0de5c706b3c26d56da020bebd6865020, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentUrl: http://ozone.kuubix.be/HAY.glb
+  currentUrl: https://ozone.kuubix.be/HAY.glb
   speed: 1000
 --- !u!4 &1849701229
 Transform:
