@@ -7,6 +7,7 @@ public class GltLoader : MonoBehaviour
     public string currentUrl = "http://ozone.kuubix.be/3D.glb";
     public float speed = 1.0f;
     private string oldUrl = "";
+    public bool reFetch = false;
 
 
     // Start is called before the first frame update
@@ -18,9 +19,10 @@ public class GltLoader : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (oldUrl != currentUrl)
+        if (oldUrl != currentUrl && reFetch)
         {
             SetGltfAsset(currentUrl);
+            reFetch = false;
         }
 
         Vector3 currentRot = transform.rotation.eulerAngles;

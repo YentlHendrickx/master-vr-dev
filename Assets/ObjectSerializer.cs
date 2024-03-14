@@ -1,9 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json;
-using System.Runtime.InteropServices.WindowsRuntime;
+using static SerializationClasses;
+
 
 public class ObjectSerializer : MonoBehaviour
 {
@@ -18,7 +18,6 @@ public class ObjectSerializer : MonoBehaviour
     /// Add options to include specific fields?
     /// 
     /// </summary>
-
 
     public bool save = false;
 
@@ -42,6 +41,10 @@ public class ObjectSerializer : MonoBehaviour
     {
         List<GameObjectData> dataList = new List<GameObjectData>();
         GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
+        // GameObject[] allObjects = UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects();
+
+        Dictionary<GameObjectData, GameObject> parentReferences = new Dictionary<GameObjectData, GameObject>();
+
         foreach (GameObject obj in allObjects)
         {
             if (obj.name == "Main Camera" || obj.name == "Directional Light")
@@ -49,9 +52,27 @@ public class ObjectSerializer : MonoBehaviour
                 continue;
             }
 
-            Debug.Log("Processing: " + obj.name);
             GameObjectData data = GetGameObjectData(obj);
-            dataList.Add(data);
+
+            if (data.name != "Scene" && !data.name.Contains("Node-"))
+            {
+                parentReferences.Add(data, obj);
+                dataList.Add(data);
+            }
+        }
+
+        // Loop over datalist, update parent references
+        foreach (GameObjectData data in dataList)
+        {
+            if (parentReferences.ContainsKey(data))
+            {
+                GameObject self = parentReferences[data];
+                if (self.transform.parent != null)
+                {
+                    GameObject parent = self.transform.parent.gameObject;
+                    data.parent = GetGameObjectData(parent);
+                }
+            }
         }
 
         // serialize, error if we have a loop (default behavior, but just for clarity)
@@ -93,7 +114,6 @@ public class ObjectSerializer : MonoBehaviour
                 parameters = new Dictionary<string, string>()
             };
 
-            // Go through all parameters of the component
             foreach (var field in component.GetType().GetFields())
             {
                 string name = field.Name;
@@ -111,52 +131,3 @@ public class ObjectSerializer : MonoBehaviour
 
 }
 
-[Serializable]
-public class GameObjectData
-{
-    public string name;
-    public bool isActive;
-    public TransformData transform;
-    public List<ComponentData> components;
-}
-
-[Serializable]
-public class TransformData
-{
-    public SerializableVector3 position;
-    public SerializableVector3 rotation;
-    public SerializableVector3 scale;
-}
-
-[Serializable]
-public class ComponentData
-{
-    public string type;
-    public Dictionary<string, string> parameters;
-}
-
-/// Credit to ensiferum888 for this idea,
-// https://forum.unity.com/threads/jsonserializationexception-self-referencing-loop-detected.1264253/
-[System.Serializable]
-public class SerializableVector3
-{
-    public float x;
-    public float y;
-    public float z;
-
-    [JsonIgnore]
-    public Vector3 UnityVector
-    {
-        get
-        {
-            return new Vector3(x, y, z);
-        }
-    }
-
-    public SerializableVector3(Vector3 v)
-    {
-        x = v.x;
-        y = v.y;
-        z = v.z;
-    }
-}

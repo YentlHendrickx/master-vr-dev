@@ -27,7 +27,10 @@ public class MeshExtruder : MonoBehaviour
 
     void Start()
     {
-        Initialize();
+        if (sprite != null)
+        {
+            Initialize();
+        }
     }
 
     private void Initialize()
@@ -113,7 +116,7 @@ public class MeshExtruder : MonoBehaviour
 
     public void Update()
     {
-        if (recalculate)
+        if (recalculate && sprite != null)
         {
             recalculate = false;
             Initialize();
