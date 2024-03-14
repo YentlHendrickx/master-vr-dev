@@ -40,17 +40,12 @@ public class ObjectSerializer : MonoBehaviour
     private string SaveToJson()
     {
         List<GameObjectData> dataList = new List<GameObjectData>();
-<<<<<<< HEAD
         GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
         // GameObject[] allObjects = UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects();
 
         Dictionary<GameObjectData, GameObject> parentReferences = new Dictionary<GameObjectData, GameObject>();
 
         foreach (GameObject obj in allObjects)
-=======
-        // GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
-        foreach (GameObject obj in UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects())
->>>>>>> c4edf890f713ea8bfbd6b26b38854968d82f81ce
         {
             if (obj.name == "Main Camera" || obj.name == "Directional Light")
             {
